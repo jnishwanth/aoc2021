@@ -1,20 +1,17 @@
 #!/usr/bin/env python3
 
-from functions import read, get_data
-from pprint import pprint
+from functions import get_data
 import numpy as np
+import sys
 
 def to_array():
-    with open('inp4', 'r') as file:
+    infile = sys.argv[1] if len(sys.argv)>1 else 'inp4'
+    with open(infile) as file:
         numbers = file.readline().replace('\n', '').split(',')
-        raw_cards = [line.split() for line in file.readlines()]
-        cards = []
-        for i in range(len(raw_cards)):
-            if(raw_cards[i]==[]):
-                cards.append([])
-                continue
-            cards[-1].append(raw_cards[i])
-        return numbers, cards
+        cards = [[line.split() for line in card.split('\n')] for card in file.read().split('\n\n')]
+    cards[-1].pop(-1)
+    cards[0].pop(0)
+    return numbers, cards
 
 def check_complete(card):
     checkLine = []
@@ -47,6 +44,12 @@ def calc_score(finNumber, finCard):
     score *= int(finNumber)
     return score
 
+def delete_card(cards, card):
+    for i in range(len(cards)):
+        if(cards[i]==card):
+            cards.pop(i)
+            return cards
+
 def first_card(numbers, cards):
     finCard = []
     finNumber = -1
@@ -62,12 +65,6 @@ def first_card(numbers, cards):
         break
     return calc_score(finNumber, finCard)
 
-def delete_card(cards, card):
-    for i in range(len(cards)):
-        if(cards[i]==card):
-            cards.pop(i)
-            return cards
-
 def last_card(numbers, cards):
     for number in numbers:
         cards = mark_num(cards, number)
@@ -79,14 +76,9 @@ def last_card(numbers, cards):
                     return calc_score(finNumber, finCard)
                 cards = delete_card(cards, card)
 
-def main():
-    get_data(4,2021)
+if __name__ == '__main__':
+    #get_data(4,2021)
     numbers, cards = to_array()
 
-    firstScore = first_card(numbers,cards)
-    lastScore = last_card(numbers, cards)
-    print(firstScore, lastScore)
-
-
-if __name__ == '__main__':
-    main()
+    print(first_card(numbers, cards))
+    print(last_card(numbers, cards))
