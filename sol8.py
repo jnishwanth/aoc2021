@@ -3,11 +3,6 @@ import sys
 from functions import get_data
 from collections import defaultdict
 
-segments = defaultdict(str)
-total = 0
-def get_key(value, segments=segments):
-    return list(segments.keys())[list(segments.values()).index(value)]
-
 def str_add(str1, str2):
     tmp = ''
     for letter in str(str2):
@@ -18,10 +13,14 @@ def str_add(str1, str2):
 if __name__=='__main__':
     get_data(8,2021)
     infile = sys.argv[1] if len(sys.argv)>1 else 'inp8'
+
     inNum = [[''.join(sorted(digit)) for digit in line.split(' | ')[0].replace('\n','').split(' ')] for line in open(infile).readlines()]
     outNum = [[''.join(sorted(digit)) for digit in line.split(' | ')[1].replace('\n','').split(' ')] for line in open(infile).readlines()]
-    unique = 0
+
+    segments = defaultdict(str)
+    total = 0
     i = 0
+
     for line in inNum:
         for digit in line:
             if(len(digit)==2):
@@ -32,13 +31,11 @@ if __name__=='__main__':
                 segments[7] = digit
             elif(len(digit)==7):
                 segments[8] = digit
-
         for digit in line:
             if(len(digit)==5 and len(str_add(digit, segments[1])) == 5):
                 segments[3] = digit
             elif(len(digit)==6 and len(str_add(digit, segments[1])) == 7):
                 segments[6] = digit
-
         for digit in line:
             if(digit in segments.values()):
                 continue
